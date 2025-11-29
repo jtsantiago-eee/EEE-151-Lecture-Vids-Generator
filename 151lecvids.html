@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EEE 151 Lecvids Link Generator</title>
+<style>
+  body {
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    padding: 28px;
+    background: #f7f7fb;
+    color: #111;
+  }
+  .box {
+    background: #fff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 6px 18px rgba(20,20,40,0.06);
+    max-width: 720px;
+  }
+  input[type="text"] {
+    padding: 6px 10px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    width: 160px;
+    font-size: 1rem;
+  }
+  button#generateBtn {
+    padding: 6px 12px;
+    border-radius: 8px;
+    border: none;
+    background: #1a73e8;
+    color: white;
+    font-size: 0.9rem;
+    cursor: pointer;
+    margin-left: 8px;
+  }
+  ul { padding-left: 0; margin-top: 16px; }
+  li { margin: 8px 0; display: flex; align-items: center; }
+  a.lecture-btn {
+    display: inline-block;
+    padding: 6px 12px;
+    background: #1a73e8;
+    color: white;
+    font-weight: 500;
+    text-decoration: none;
+    border-radius: 8px;
+    margin-right: 12px;
+    transition: background 0.2s;
+  }
+  a.lecture-btn:hover {
+    background: #1a73e8;
+  }
+  span.url { font-size: 0.85rem; color: #555; word-break: break-all; }
+</style>
+</head>
+<body>
+
+<div class="box">
+  <h1>EEE 151 Lecvids Link Generator</h1>
+
+  <label for="snInput">Input last 5 digits of SN:</label>
+  <input type="text" id="snInput" maxlength="5" placeholder="e.g., 02700">
+  <button id="generateBtn">Generate Links</button>
+
+  <ul id="linksList">
+    <!-- Generated lecture links will appear here -->
+  </ul>
+</div>
+
+<script>
+function generateLinks() {
+  const sn = document.getElementById("snInput").value.trim();
+  if (sn.length !== 5 || isNaN(sn)) {
+    alert("Please enter exactly 5 digits.");
+    return;
+  }
+
+  const container = document.getElementById("linksList");
+  container.innerHTML = ''; // clear previous links
+
+  const baseURL = "http://202.92.132.69:8888/manuel/";
+
+  for (let i = 1; i <= 23; i++) {
+    const lectureNum = i;
+    const idx = String(i).padStart(2, '0'); // 01, 02, ...
+    const href = `${baseURL}${sn}_${idx}.mp4`;
+
+    const li = document.createElement("li");
+
+    // Lecture button
+    const a = document.createElement("a");
+    a.href = href;
+    a.target = "_blank";
+    a.rel = "noopener";
+    a.textContent = `Lecture ${lectureNum}`;
+    a.className = "lecture-btn";
+
+    // Show actual URL beside it
+    const span = document.createElement("span");
+    span.className = "url";
+    span.textContent = href;
+
+    li.appendChild(a);
+    li.appendChild(span);
+    container.appendChild(li);
+  }
+}
+
+// Button click
+document.getElementById("generateBtn").addEventListener("click", generateLinks);
+
+// Enter key triggers generation
+document.getElementById("snInput").addEventListener("keydown", (event) => {
+  if (event.key === "Enter") {
+    generateLinks();
+  }
+});
+</script>
+
+</body>
+</html>
