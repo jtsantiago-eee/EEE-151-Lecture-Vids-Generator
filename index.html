@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>EEE 151 Lecvids Playlist</title>
+<title>EEE 151 Lecvids Link Generator</title>
 <style>
   body {
     font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
@@ -17,7 +17,6 @@
     border-radius: 12px;
     box-shadow: 0 6px 18px rgba(20,20,40,0.06);
     max-width: 720px;
-    margin-bottom: 20px;
   }
   input[type="text"] {
     padding: 6px 10px;
@@ -37,50 +36,35 @@
     margin-left: 8px;
   }
   ul { padding-left: 0; margin-top: 16px; }
-  li { margin: 8px 0; display: flex; align-items: center; flex-wrap: wrap; }
-  button.lecture-btn {
+  li { margin: 8px 0; display: flex; align-items: center; }
+  a.lecture-btn {
     display: inline-block;
     padding: 6px 12px;
     background: #1a73e8;
     color: white;
     font-weight: 500;
-    border: none;
+    text-decoration: none;
     border-radius: 8px;
     margin-right: 12px;
-    cursor: pointer;
     transition: background 0.2s;
   }
-  button.lecture-btn:hover {
-    background: #1558b0;
+  a.lecture-btn:hover {
+    background: #1a73e8;
   }
   span.url { font-size: 0.85rem; color: #555; word-break: break-all; }
-  video {
-    width: 100%;
-    max-width: 720px;
-    border-radius: 12px;
-    box-shadow: 0 6px 18px rgba(20,20,40,0.06);
-  }
 </style>
 </head>
 <body>
 
 <div class="box">
-  <h1>EEE 151 Lecvids Playlist</h1>
+  <h1>EEE 151 Lecvids Link Generator</h1>
 
   <label for="snInput">Input last 5 digits of SN:</label>
   <input type="text" id="snInput" maxlength="5" placeholder="e.g., 12345">
-  <button id="generateBtn">Generate Playlist</button>
-</div>
+  <button id="generateBtn">Generate Links</button>
 
-<div class="box">
-  <video id="videoPlayer" controls>
-    Your browser does not support HTML5 video.
-  </video>
-</div>
-
-<div class="box">
   <ul id="linksList">
-    <!-- Playlist buttons will appear here -->
+    <!-- Generated lecture links will appear here -->
   </ul>
 </div>
 
@@ -96,7 +80,6 @@ function generateLinks() {
   container.innerHTML = ''; // clear previous links
 
   const baseURL = "http://202.92.132.69:8888/manuel/";
-  const videoPlayer = document.getElementById("videoPlayer");
 
   for (let i = 1; i <= 23; i++) {
     const lectureNum = i;
@@ -106,22 +89,19 @@ function generateLinks() {
     const li = document.createElement("li");
 
     // Lecture button
-    const button = document.createElement("button");
-    button.textContent = `Lecture ${lectureNum}`;
-    button.className = "lecture-btn";
+    const a = document.createElement("a");
+    a.href = href;
+    a.target = "_blank";
+    a.rel = "noopener";
+    a.textContent = `Lecture ${lectureNum}`;
+    a.className = "lecture-btn";
 
-    // On click, load video
-    button.addEventListener("click", () => {
-      videoPlayer.src = href;
-      videoPlayer.play();
-    });
-
-    // Show URL beside it
+    // Show actual URL beside it
     const span = document.createElement("span");
     span.className = "url";
     span.textContent = href;
 
-    li.appendChild(button);
+    li.appendChild(a);
     li.appendChild(span);
     container.appendChild(li);
   }
