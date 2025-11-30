@@ -35,8 +35,20 @@
     cursor: pointer;
     margin-left: 8px;
   }
-  ul { padding-left: 0; margin-top: 16px; }
-  li { margin: 8px 0; display: flex; align-items: center; }
+
+  /* --- FIXES --- */
+  ul { 
+    padding-left: 0; 
+    margin-top: 16px; 
+  }
+  li { 
+    margin: 8px 0; 
+    display: grid; 
+    grid-template-columns: 140px 1fr;  /* 140px fixed - aligns everything */
+    align-items: center;
+    column-gap: 24px;
+  }
+
   a.lecture-btn {
     display: inline-block;
     padding: 6px 12px;
@@ -45,13 +57,20 @@
     font-weight: 500;
     text-decoration: none;
     border-radius: 8px;
-    margin-right: 12px;
     transition: background 0.2s;
+    text-align: center;
+    font-size: 16px;
+
   }
   a.lecture-btn:hover {
-    background: #1a73e8;
+    background: #145fc4;
   }
-  span.url { font-size: 0.85rem; color: #555; word-break: break-all; }
+
+  span.url { 
+    font-size: 0.85rem; 
+    color: #555; 
+    word-break: break-all; 
+  }
 </style>
 </head>
 <body>
@@ -63,9 +82,7 @@
   <input type="text" id="snInput" maxlength="5" placeholder="e.g., 12345">
   <button id="generateBtn">Generate Links</button>
 
-  <ul id="linksList">
-    <!-- Generated lecture links will appear here -->
-  </ul>
+  <ul id="linksList"></ul>
 </div>
 
 <script>
@@ -77,29 +94,29 @@ function generateLinks() {
   }
 
   const container = document.getElementById("linksList");
-  container.innerHTML = ''; // clear previous links
+  container.innerHTML = '';
 
   const baseURL = "http://202.92.132.69:8888/manuel/";
 
   for (let i = 1; i <= 23; i++) {
-    const lectureNum = i;
-    const idx = String(i).padStart(2, '0'); // 01, 02, ...
+    const idx = String(i).padStart(2, '0');
     const href = `${baseURL}${sn}_${idx}.mp4`;
 
     const li = document.createElement("li");
 
-    // Lecture button
     const a = document.createElement("a");
     a.href = href;
     a.target = "_blank";
     a.rel = "noopener";
-    a.textContent = `Lecture ${lectureNum}`;
+    a.textContent = `Lecture ${i}`;
     a.className = "lecture-btn";
 
-    // Show actual URL beside it
-    const span = document.createElement("span");
+    const span = document.createElement("a");
     span.className = "url";
+    span.href = href;
     span.textContent = href;
+    span.target = "_blank";
+    span.rel = "noopener";
 
     li.appendChild(a);
     li.appendChild(span);
@@ -107,10 +124,7 @@ function generateLinks() {
   }
 }
 
-// Button click
 document.getElementById("generateBtn").addEventListener("click", generateLinks);
-
-// Enter key triggers generation
 document.getElementById("snInput").addEventListener("keydown", (event) => {
   if (event.key === "Enter") {
     generateLinks();
